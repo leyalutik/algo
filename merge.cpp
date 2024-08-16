@@ -3,90 +3,67 @@
 #include<string>
 
 
-void merge(std::vector<int>& v, int left, int middle, int right)
+void swap(int& a, int& b)
 {
-	int n_left = middle - left + 1; // include middle element
-	int n_right = right - middle; 
+	int temp = a;
+	a = b;
+	b =temp;
+}
 
-	int a_left[n_left], a_right[n_right]; // a - arrays, left and right
-	for(int i=0; i< n_left; ++i)
-	{
-		a_left[i] = v[left+i];
-	}
-	for(int i=0; i<n_right; ++i)
-	{
-		a_right[i] = v[middle+1+i];
-	}
+int partition(int *a, const int l0, const int ln)
+{
+	int k = l0;
+	int pivot = a[ln];
 
-	//merge
-	int cursor_left = 0, cursor_right = 0;
-	int k = left;
-
-	//erase v[left,right] and insert a_left[],a_right[]
-	while(cursor_left < n_left && cursor_right < n_right)
+	for(int i=l0; i<ln; ++i)
 	{
-		if(a_left[cursor_left] <= a_right[cursor_right])
+		if(a[i] < pivot)
 		{
-			v[k++] = a_left[cursor_left++];
-		}
-		else
-		{
-			v[k++] = a_right[cursor_right++];
-
+			swap(a[k],a[i]);
+			++k;
 		}
 	}
-
-	while(cursor_left < n_left )
-	{
-
-		v[k++] = a_left[cursor_left++];
-	}
-	while(cursor_right < n_right )
-	{
-
-		v[k++] = a_right[cursor_right++];
-	}
+	swap(a[ln],a[k]);
+	return k;
 }
-void merge_sort(std::vector<int>& v, int left, int right)
+
+
+void quick_sort( int* a, const int l0, const int ln)
 {
- if(right<=left)
- {
-	 return;
- }
+	if(ln <= l0)
+	{
+		return;
+	}
 
- int middle = left + (right-left)/2;
-
- merge_sort(v,left,middle);
- merge_sort(v,middle+1,right);
-
- merge(v,left,middle,right);
+	int p = partition (a,l0,ln);
+	quick_sort(a,l0,p-1);
+	quick_sort(a,p+1,ln);
 
 }
 
 
-void sort(std::vector<int>& v)
+void sort(int* a, int l0, int ln)
 {
-
-	merge_sort(v,0,v.size()-1);
+	quick_sort(a,l0,ln);
 }
-
-
 
 int main()
 {
-	std::vector<int> v = {4,3,6,2};
-	for(auto i:v)
+	int a[6] = {3,8,4,0,7,3};
+	for (auto& i : a)
 	{
 		std::cout << i << " ";
 	}
-	std::cout << std::endl;
+	std::cout << "\n";
 
-	sort(v);
+	sort(a,0,5);
 
-	for(auto i:v)
+
+	for (auto& i : a)
 	{
 		std::cout << i << " ";
 	}
-	std::cout << std::endl;
+	std::cout << "\n";
+
 	return 0;
 }
